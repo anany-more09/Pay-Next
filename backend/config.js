@@ -1,4 +1,4 @@
-const JWT_SECRET = "Ananykasecrete";
-moduleexports={
+const JWT_SECRET = "Ananymorehai"
+module.exports={
     JWT_SECRET
 }

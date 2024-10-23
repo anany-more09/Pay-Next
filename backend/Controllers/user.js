@@ -1,17 +1,19 @@
-const express = require("express");
-const zod = require("zod");
-const User = require("../Models/user");
-const Acount = require("../Models/acount");
+
+const zod  = require("zod");
+const { User } = require("../Models/user");
+const { Acount } = require("../Models/acount");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = require("../config");
+require("dotenv").config();
+//const JWT_SECRET = require("../config");
+
 
 
 // this is same as signupbody for validating the user inputs
 const signupSchema = zod.object({
     username: zod.string().email(),
     password: zod.string(),
-    firstname: zod.string(),
-    lastname: zod.string()
+    firstName: zod.string(),
+    lastName: zod.string()
 
 })
 
@@ -29,49 +31,53 @@ async function handleUserSignUp(req, res)
     {
         return res.status(411).json({
             message: "Incorrect inputs"
-        })
+        });
     }
 
-    const existingUser = await User.findOne({
-        username: req.body.username
-    })
+    const existingUser = await User.findOne({username: req.body.username})
 
     if(existingUser)
     {
         return res.status(411).json({
-            message: "Email alread taken"
-        })
+            message: "Email already taken"
+        });
     }
 
-    
-}
+
 
 const user = await User.create({ 
     username: req.body.username,
     password: req.body.password,
-    firstname: req.body.firstname,
-    lastname: req.body.lastname
+    firstName: req.body.firstName,
+    lastName: req.body.lastName
 
 })
 
-const userId = User._id;
+const userId = user._id;
 
 await Acount.create({
     userId,
-    balance: 1 + Math.random() * 10000
+    balance: parseInt(1 + Math.random() * 10000)
 })
 
 const token = jwt.sign({
     userId
-}, JWT_SECRET);
+}, process.env.JWT_SECRET);
+// const userId = User._id;
 
 res.json({
     messsage: "User created successfully",
     token: token
-})
+});
+
+
+}
+
 
 
 // handleing the signin route here
+
+
 async function handleUserSignIn(req, res)
 {
     const {success} = signinSchema.safeParse(req.body)
@@ -90,8 +96,8 @@ async function handleUserSignIn(req, res)
     if(user)
     {
         const token = jwt.sign({
-            userId
-        }, JWT_SECRET)
+            userId: req.userId
+        }, process.env.JWT_SECRET)
 
         res.json({
             token: token
@@ -107,8 +113,8 @@ async function handleUserSignIn(req, res)
 
 const updateshema = zod.object({
     password:  zod.string().optional(),
-    firstname:  zod.string().optional(), 
-    lastname: zod.string().optional(),
+    firstName:  zod.string().optional(), 
+    lastName: zod.string().optional(),
 })
 
 async function handleUpdateUser(req, res)
@@ -146,8 +152,8 @@ async function filterUsers(req, res) {
     res.json({
         user: user.map(user =>({
             username: user.name,
-            firstname: user.firstname,
-            lastname: user.lastname,
+            firstName: user.firstName,
+            lastName: user.lastName,
             _id: user._id
         }))
     })
@@ -160,3 +166,17 @@ async function filterUsers(req, res) {
     handleUpdateUser, 
     filterUsers
  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

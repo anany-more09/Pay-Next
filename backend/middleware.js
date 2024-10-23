@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken")
-const {JWT_SECRETE} = require("./config")
+require("dotenv").config();
 
 function authmiddleware(req, res, next)
 {
@@ -10,11 +10,11 @@ function authmiddleware(req, res, next)
        res.status(404).json({})
    }
 
-   const token = authHeader.slit('')[1]
+   const token = authHeader.split('')[1]
 
 
    try{
-      const decoded = jwt.verify(token, JWT_SECRETE);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       if(decoded.userId)
       {
@@ -36,3 +36,11 @@ function authmiddleware(req, res, next)
 module.exports = {
     authmiddleware
 }
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose")
 
-const userSchema = new mongoose.userSchema({
+const userSchema = new mongoose.Schema({
     username:{
       type: String,
       required: true,
@@ -13,7 +13,7 @@ const userSchema = new mongoose.userSchema({
     password:{
       type: String,
       required: true,
-      maxLength: 6
+      maxLength: 8
     },
     firstName:{
       type: String,

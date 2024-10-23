@@ -27,7 +27,7 @@ try{
         {
             await session.abortTransaction();
             return res.status(400).jsno({
-                message: "Insufficient Balance"
+                message: "Insufficient Balance"  //if anyone/two user tries to do the "Concurrent request" then it will protect us from fooling the database;
             });
         } 
 
@@ -66,3 +66,9 @@ module.exports = {
     handleGetBalance,
     handleTransfer
 }
+
+
+
+// here anything that comes under 
+//      session.startTransaction(); to   await session.commitTransaction();
+// if anything goes wrong it will abort the transaction or stop the process.
