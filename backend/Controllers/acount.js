@@ -4,7 +4,7 @@ const Acount = require("../Models/acount");
 async function handleGetBalance(req, res)
 {
     const account = await Acount.findOne({
-        userId: req.userId // may require change after testing
+        userId: req.headers.userId // may require change after testing
 
     });
     

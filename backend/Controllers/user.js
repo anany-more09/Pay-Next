@@ -132,33 +132,42 @@ async function handleUpdateUser(req, res)
     messsage:"Updated Successfully"
   })
 }
-
 async function filterUsers(req, res) {
+    const { firstName, lastName } = req.body;
+
+    // Check if at least one filter is provided
+    if (!firstName && !lastName) {
+        return res.status(400).json({
+            message: "Please provide either firstName or lastName."
+        });
+    }
+
+    const filterCriteria = [];
     
-    const filter = req.query.filter || "";
-    const user = await User.find({
-        // these are the quriesfor searching the user by thier firstname or lastname
-        $or:[
-            {firstname : {"$regex": filter}},  //this syntax we can use for matching the subsstring either from the firstname "or" from the last name.
-            {lastname: {"$regex": filter} }
-        ]
-    })
+    // Add filters only if provided
+    if (firstName) {
+        filterCriteria.push({ firstName: { $regex: firstName, $options: "i" } });
+    }
+    if (lastName) {
+        filterCriteria.push({ lastName: { $regex: lastName, $options: "i" } });
+    }
 
-    // $or:[
-    //     {firstname : {"$regex": filter, "$options":"i"}},  //this syntax we can use for 
-    //     {lastname: {"$regex": filter, "$options": "i"} }
-    // ] we can use this as well
+    // Find users based on the provided filters
+    const users = await User.find({
+        $or: filterCriteria
+    });
 
+    // Return the filtered users
     res.json({
-        user: user.map(user =>({
-            username: user.name,
+        users: users.map(user => ({
+            username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
             _id: user._id
         }))
-    })
-
+    });
 }
+
 
  module.exports = {
     handleUserSignUp,

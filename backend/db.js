@@ -1,15 +1,13 @@
 
 const mongoose = require("mongoose");
 
-async function connectToMongodb() {
+async function connectToMongoDb(connection_url) {
     try {
-        await mongoose.connect('mongodb://localhost:27017/pay-next');
+        await mongoose.connect(connection_url);
         console.log("Connection to MongoDB is successful");
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
     }
 }
 
-module.exports = {
-    connectToMongodb
-};
+module.exports = {connectToMongoDb}
