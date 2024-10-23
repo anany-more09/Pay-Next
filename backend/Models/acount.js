@@ -1,10 +1,11 @@
 
 const mongoose = require("mongoose")
+const User = require("./user")
  
 const acountSchema = new mongoose.Schema({
     userId:{
-        type: mongoose.Schema.Types.ObjectId, // Reference to user model
-        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId, // thisis a certain type that we have to give because in mongodb document we have $odj. it will make database little strict.
+        ref: 'User', // Reference to user model
         required: true,
     },
     balance:

@@ -54,7 +54,7 @@ const user = await User.create({
 
 })
 
-const userId = user._id;
+const userId = User._id;
 
 await Acount.create({
     userId,
@@ -62,7 +62,7 @@ await Acount.create({
 })
 
 const token = jwt.sign({
-    userId: user
+    userId
 }, JWT_SECRET);
 
 res.json({
@@ -90,7 +90,7 @@ async function handleUserSignIn(req, res)
     if(user)
     {
         const token = jwt.sign({
-            userId: User._id
+            userId
         }, JWT_SECRET)
 
         res.json({
@@ -129,13 +129,27 @@ async function handleUpdateUser(req, res)
 
 async function filterUsers(req, res) {
     
-    const filter = req.query.filter
+    const filter = req.query.filter || "";
     const user = await User.find({
         // these are the quriesfor searching the user by thier firstname or lastname
         $or:[
-            {firstname : {"$regex": filter, "$options":"i"}},
-            {lastname: {"$regex": filter, "$options": "i"} }
+            {firstname : {"$regex": filter}},  //this syntax we can use for matching the subsstring either from the firstname "or" from the last name.
+            {lastname: {"$regex": filter} }
         ]
+    })
+
+    // $or:[
+    //     {firstname : {"$regex": filter, "$options":"i"}},  //this syntax we can use for 
+    //     {lastname: {"$regex": filter, "$options": "i"} }
+    // ] we can use this as well
+
+    res.json({
+        user: user.map(user =>({
+            username: user.name,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            _id: user._id
+        }))
     })
 
 }

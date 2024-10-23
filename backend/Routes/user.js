@@ -1,7 +1,7 @@
 const express = require("express");
 const userRoute = express.Router();
-import { handleUserSignUp, handleUserSignIn, handleUpdateUser } from "../Controllers/user";
-import { authmiddleware } from "../middleware";
+const { handleUserSignUp, handleUserSignIn, handleUpdateUser, filterUsers } = require("../Controllers/user");
+const {authmiddleware} = require("../middleware")
 
 userRoute.post("/signup", handleUserSignUp)
 userRoute.post("/signin", handleUserSignIn)
