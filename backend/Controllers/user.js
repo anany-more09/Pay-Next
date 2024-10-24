@@ -53,7 +53,7 @@ const user = await User.create({
 
 })
 
-const userId = user._id;
+const userId = User._id;
 
 await Acount.create({
     userId,
@@ -97,7 +97,7 @@ async function handleUserSignIn(req, res)
     {
         const token = jwt.sign({
             userId: req.userId
-        }, process.env.JWT_SECRET)
+        }, process.env.JWT_SECRET, {expiresIn: '20min'})
 
         res.json({
             token: token
@@ -106,7 +106,7 @@ async function handleUserSignIn(req, res)
     }
 
     res.status(411).json({
-        message: "Error while logging in"
+        message: "Incorrect password"
     })
 
 }
@@ -153,13 +153,13 @@ async function filterUsers(req, res) {
     }
 
     // Find users based on the provided filters
-    const users = await User.find({
+    const user = await User.find({
         $or: filterCriteria
     });
 
     // Return the filtered users
     res.json({
-        users: users.map(user => ({
+        user: user.map(user => ({
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,

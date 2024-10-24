@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const Acount = require("../Models/acount");
+const {Acount} = require("../Models/acount");
 
 async function handleGetBalance(req, res)
 {
@@ -11,44 +11,43 @@ async function handleGetBalance(req, res)
     res.json({
        balance: account.balance
     });
-
+   
 }
 
 async function handleTransfer(req, res)
 {
    const session = await mongoose.startSession();
 try{
-   session.startTransaction();
-   const { amount, to } = req.body;
 
-   //Fetch the accounts within the transaction
-   const account = await Acount.findOne({userId: req.userId}).session(session);
-    if(!account || account.balance < amount)
-        {
-            await session.abortTransaction();
-            return res.status(400).jsno({
-                message: "Insufficient Balance"  //if anyone/two user tries to do the "Concurrent request" then it will protect us from fooling the database;
-            });
-        } 
+session.startTransaction();
+const { amount, to } = req.body;
 
-    const toAccount = await Acount.findOne({userId:to }).session(session);
+// Fetch the accounts within the transaction
+const account = await Acount.findOne({ userId: req.userId }).session(session);
 
-    if(!toAccount)
-    {
-        await session.abortTransaction();
-        return res.status(400).json({
-            message: "Invalid account"
-        });
-    }
+if (!account || account.balance < amount) {
+    await session.abortTransaction();
+    return res.status(400).json({
+        message: "Insufficient balance"
+    });
+}
 
-    // PERFORM THE ACTUAL TRANSACTION from x user's acount to some y user's account
+const toAccount = await Acount.findOne({ userId: to }).session(session);
 
-    await Acount.updateone({userId: req.userId}, {$inc:{balance: -amount}}).session(session)
-    await Acount.updateone({userId:to}, {$inc:{balance: amount}}).session(session)
-    
+if (!toAccount) {
+    await session.abortTransaction();
+    return res.status(400).json({
+        message: "Invalid account"
+    });
+}
 
-    // Commit the transaction 
-    await session.commitTransaction();
+// Perform the transfer
+await Acount.updateOne({ userId: req.userId }, { $inc: { balance: -amount } }).session(session);
+await Acount.updateOne({ userId: to }, { $inc: { balance: amount } }).session(session);
+
+// Commit the transaction
+await session.commitTransaction();
+
 }
 catch(err){
     await session.abortTransaction();
