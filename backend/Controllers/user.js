@@ -53,7 +53,7 @@ const user = await User.create({
 
 })
 
-const userId = User._id;
+const userId = user._id;
 
 await Acount.create({
     userId,

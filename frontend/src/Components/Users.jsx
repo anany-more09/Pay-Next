@@ -11,8 +11,8 @@ export const Users = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/v1/user/bulk`);
-                setUsers(response.data.users);
+                const response = await axios.get(`http://localhost:3000/api/v1/user/bulk?filter=${filter}`);
+                setUsers(response.data.user);
             } catch (error) {
                 console.error("Error fetching users:", error);
             }
@@ -22,6 +22,9 @@ export const Users = () => {
 
         return () => { };
     }, [filter]);
+
+
+ 
 
     return (
         <>
@@ -36,7 +39,9 @@ export const Users = () => {
                 />
             </div>
             <div>
-                {users.map(user => (<User key={user.id} user={user} />))}
+                {users.map(user => (
+                    <User key={user.id} user={user} />
+                ))}
             </div>
         </>
     );

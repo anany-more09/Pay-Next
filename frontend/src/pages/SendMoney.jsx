@@ -14,7 +14,7 @@ export const SendMoney = () => {
         setSuccessMessage("");
         setError("");
         try {
-            const response = await axios.post('http://localhost/api/v1/acount/transfer',
+            const response = await axios.post('http://localhost:3000/api/v1/acount/transfer',
                 { to: id, amount },
                 {
                     headers: {
@@ -87,3 +87,4 @@ export const SendMoney = () => {
         </div>
     );
 };
+

@@ -32,7 +32,7 @@ export const SignUp = () => {
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
     } catch (error) {
-      const message = error.response?.data?.message || "Sign-up failed. Please try again.";
+      const message = error.response?.data?.message || "Sign-up failed, Please try again.";
       setErrorMessage(message);
     }
   };
@@ -46,7 +46,7 @@ export const SignUp = () => {
           <InputBox name="firstName" onChange={handleChange} placeholder="John" label="First Name" />
           <InputBox name="lastName" onChange={handleChange} placeholder="Doe" label="Last Name" />
           <InputBox type={"email"} name="username" onChange={handleChange} placeholder="example@gmail.com" label="Email" />
-          <InputBox name="password" onChange={handleChange} placeholder="1234..." label="Password" />
+          <InputBox name="password" onChange={handleChange} placeholder="8-digits" label="Password" />
           <div className="pt-4">
             <Button onClick={handleSignUp} label="Sign up" />
           </div>
