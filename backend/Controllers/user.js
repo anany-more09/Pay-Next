@@ -132,48 +132,62 @@ async function handleUpdateUser(req, res)
     messsage:"Updated Successfully"
   })
 }
-async function filterUsers(req, res) {
-    const { firstName, lastName } = req.body;
+async function getUsers(req, res) {
+    const { firstName, lastName, showAll } = req.body;
 
-    // Check if at least one filter is provided
-    if (!firstName && !lastName) {
-        return res.status(400).json({
-            message: "Please provide either firstName or lastName."
+    try {
+        // If showAll is true, return all users without filtering
+        if (showAll) {
+            const allUsers = await User.find();
+            return res.json({
+                user: allUsers.map(user => ({
+                    username: user.username,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    _id: user._id
+                }))
+            });
+        }
+
+        // If no filters are provided, return an error message
+        if (!firstName && !lastName) {
+            return res.status(400).json({
+                message: "Please provide either firstName or lastName to filter users."
+            });
+        }
+
+        // Build filter criteria based on the provided fields
+        const filterCriteria = [];
+        if (firstName) {
+            filterCriteria.push({ firstName: { $regex: firstName, $options: "i" } });
+        }
+        if (lastName) {
+            filterCriteria.push({ lastName: { $regex: lastName, $options: "i" } });
+        }
+
+        // Find users based on filter criteria
+        const filteredUsers = await User.find({ $or: filterCriteria });
+        
+        return res.json({
+            user: filteredUsers.map(user => ({
+                username: user.username,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                _id: user._id
+            }))
         });
+    } catch (error) {
+        return res.status(500).json({ message: "Error retrieving users." });
     }
-
-    const filterCriteria = [];
-    
-    // Add filters only if provided
-    if (firstName) {
-        filterCriteria.push({ firstName: { $regex: firstName, $options: "i" } });
-    }
-    if (lastName) {
-        filterCriteria.push({ lastName: { $regex: lastName, $options: "i" } });
-    }
-
-    // Find users based on the provided filters
-    const user = await User.find({
-        $or: filterCriteria
-    });
-
-    // Return the filtered users
-    res.json({
-        user: user.map(user => ({
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            _id: user._id
-        }))
-    });
 }
+
 
 
  module.exports = {
     handleUserSignUp,
     handleUserSignIn,
     handleUpdateUser, 
-    filterUsers
+    getUsers
  }
 
 

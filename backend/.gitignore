@@ -1,0 +1,53 @@
+ # Node modules
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# dotenv environment files
+.env
+.env.local
+.env.*.local
+
+# Directory for build output (Vite)
+dist/
+
+# Vite cache
+.vite/
+.cache/
+
+# macOS
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+Desktop.ini
+
+# IDE-specific files
+.vscode/
+.idea/
+
+# Optional npm cache directory
+.npm/
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# MongoDB data files (local database)
+data/
+
+# Coverage directory
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local environment
+*.local
