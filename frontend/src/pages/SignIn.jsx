@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BottomWarning } from "../components/BottomWarning";
-import { Button } from "../Components/Button";
+import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
 import { InputBox } from "../components/InputBox";
 import { SubHeading } from "../components/SubHeading";
@@ -31,7 +31,7 @@ export const SignIn = () => {
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
     } catch (error) {
-      const message = error.response?.data?.message || "Sign-up failed. Please try again.";
+      const message = error.response?.data?.message || "Sign-in failed. Please try again.";
       setErrorMessage(message);
     }
   };
