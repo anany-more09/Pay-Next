@@ -6,6 +6,7 @@ import {SignUp} from "./pages/SignUp"
 
 function App() {
   return (
+    
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" />} />
