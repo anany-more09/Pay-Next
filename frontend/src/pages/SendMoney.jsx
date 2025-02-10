@@ -14,7 +14,7 @@ export const SendMoney = () => {
         setSuccessMessage("");
         setError("");
         try {
-            const response = await axios.post('https://pay-next-orpin.vercel.app/api/v1/acount/transfer',
+            const response = await axios.post('http://localhost:3000/api/v1/acount/transfer',
                 { to: id, amount },
                 {
                     headers: {
