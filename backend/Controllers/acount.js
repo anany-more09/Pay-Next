@@ -1,5 +1,68 @@
-const mongoose = require("mongoose")
-const {Acount} = require("../Models/acount");
+const mongoose = require("mongoose");
+const { Acount } = require("../Models/acount");
+
+async function handleTransfer(req, res) {
+    
+
+    try {
+        
+        const { amount, to } = req.body;
+        const senderId = req.userId;
+
+        if (!senderId || !to || amount === undefined) {
+            throw new Error("Missing required fields: senderId, to, or amount");
+        }
+
+        const numericAmount = Number(amount);
+        if (isNaN(numericAmount) || numericAmount <= 0) {
+            throw new Error("Invalid amount: Must be a positive number");
+        }
+
+        if (senderId === to) {
+            throw new Error("Sender and receiver cannot be the same");
+        }
+
+        const fromAccount = await Acount.findOne({ userId: senderId })
+        if (!fromAccount) {
+            throw new Error("Sender account not found");
+        }
+
+        if (fromAccount.balance < numericAmount) {
+            throw new Error("Insufficient balance");
+        }
+
+        const toAccount = await Acount.findOne({ userId: to })
+        if (!toAccount) {
+            throw new Error("Recipient account not found");
+        }
+
+        const fromUpdateResult = await Acount.updateOne(
+            { userId: senderId },
+            { $inc: { balance: -numericAmount } }
+        );
+        console.log(fromUpdateResult); // Check the result of the update
+
+        const toUpdateResult = await Acount.updateOne(
+            { userId: to },
+            { $inc: { balance: numericAmount } }
+        );
+        console.log(toUpdateResult); // Check the result of the update
+
+        
+
+        return res.json({ message: "Transaction Successful" });
+
+    } catch (err) {
+     
+        console.error("Transaction failed:", err); // Log the full error for debugging
+        return res.status(400).json({
+            message: "Transaction Failed",
+            error: err.message,
+        });
+    } finally {
+       
+    }
+}
 
 async function handleGetBalance(req, res)
 {
@@ -14,60 +77,7 @@ async function handleGetBalance(req, res)
    
 }
 
-async function handleTransfer(req, res)
-{
-   const session = await mongoose.startSession();
-try{
-
-session.startTransaction();
-const { amount, to } = req.body;
-
-// Fetch the accounts within the transaction
-const account = await Acount.findOne({ userId: req.userId }).session(session);
-
-if (!account || account.balance < amount) {
-    await session.abortTransaction();
-    return res.status(400).json({
-        message: "Insufficient balance"
-    });
-}
-
-const toAccount = await Acount.findOne({ userId: to }).session(session);
-
-if (!toAccount) {
-    await session.abortTransaction();
-    return res.status(400).json({
-        message: "Invalid account"
-    });
-}
-
-// Perform the transfer
-await Acount.updateOne({ userId: req.userId }, { $inc: { balance: -amount } }).session(session);
-await Acount.updateOne({ userId: to }, { $inc: { balance: amount } }).session(session);
-
-// Commit the transaction
-await session.commitTransaction();
-
-}
-catch(err){
-    await session.abortTransaction();
-    return res.status(500).json({
-        message:"Internal Server Error"
-    });
-}
-
-    res.json({
-        message: "Transaction Successfull"
-    });
-}
-
 module.exports = {
-    handleGetBalance,
-    handleTransfer
+    handleTransfer,
+    handleGetBalance
 }
-
-
-
-// here anything that comes under 
-//      session.startTransaction(); to   await session.commitTransaction();
-// if anything goes wrong it will abort the transaction or stop the process.

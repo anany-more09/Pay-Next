@@ -73,8 +73,6 @@ res.json({
 
 }
 
-
-
 // handleing the signin route here
 
 
@@ -126,18 +124,22 @@ async function handleUpdateUser(req, res)
         message: "Error while updating details"
     })
   }
-
+  
   await User.updateOne({_id: req.userId}, req.body)
   res.json({
     messsage:"Updated Successfully"
   })
 }
+
 async function getUsers(req, res) {
-    const { firstName, lastName, showAll } = req.body;
+
+    // console.log('Query Params:', req.query);
+    const { firstName, lastName, showAll } = req.query;
+    console.log(showAll)
 
     try {
         // If showAll is true, return all users without filtering
-        if (showAll) {
+        if (!showAll) {
             const allUsers = await User.find();
             return res.json({
                 user: allUsers.map(user => ({
@@ -180,8 +182,6 @@ async function getUsers(req, res) {
         return res.status(500).json({ message: "Error retrieving users." });
     }
 }
-
-
 
  module.exports = {
     handleUserSignUp,

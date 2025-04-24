@@ -74,3 +74,14 @@ function User({ user }) {
         </div>
     );
 }
+
+User.propTypes = {
+     user: PropTypes.shape({
+
+        id:        PropTypes.string.isRequired,
+        firstName: PropTypes.string.isRequired,
+        lastName:  PropTypes.string
+        
+     })
+}
+

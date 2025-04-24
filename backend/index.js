@@ -8,7 +8,7 @@ const {bankRoute} = require("./Routes/acount")
 const CONNECTION_URL = process.env.MONGO_CONNECTION_STRING 
 const PORT = process.env.PORT || 3000
 
-app.use(cors());
+app.use(cors())
 app.use(express.json());
 
 app.use("/api/v1/user", userRoute)
