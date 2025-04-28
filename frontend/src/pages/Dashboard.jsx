@@ -1,28 +1,48 @@
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import {Appbar} from "../components/Appbar";
+
 import { Balance } from "../components/Balance";
 import { Users } from "../components/Users";
-import { useState } from "react";
+
 
 export const Dashboard = () => {
     const navigate = useNavigate();
-    const [balance, setBalance] = useState()
-
+    // const [value, setValue] = useState();
+    
     useEffect(() => {
         const token = localStorage.getItem("token");
-        // Need to add auth check!
+        
         if (!token) {
             navigate("/signin");
         }
     }, [navigate]);
+    // useEffect(() => {
+         
+    //         const getBalance =  async () => {
+
+    //             try{
+    //                 const fetchBalance = await axios.get('http://localhost:3000/api/v1/acount/getbalance');
+    //                 setValue(fetchBalance.data.balance)
+    //                 console.log(value, ": This is your value") 
+    //             }
+    //             catch(error)
+    //             {
+    //                 console.log("Balance not found", error)
+    //             }
+           
+    //          }
+    //      getBalance();
+    //      return () => {}
+       
+
+    // })
 
   
     return (
         <div>
-            <Appbar />
-            <div className="m-8">
-                <Balance value={"10,000"} />
+        
+            <div className="my-8 mx-4">
+                <Balance value={'100,000'} />
                 <Users />
             </div>
         </div>

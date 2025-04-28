@@ -12,7 +12,7 @@ export const SendMoney = () => {
 
     const handleTransfer = async () => {
         setSuccessMessage("");
-        setError("");
+        setError(""); 
         try {
             const response = await axios.post('http://localhost:3000/api/v1/acount/transfer',
                 { to: id, amount },
@@ -22,15 +22,16 @@ export const SendMoney = () => {
                     },
                 }
             );
+            // console.log('Response:', response.data); // Add this to inspect it
             setAmount('');
-            setSuccessMessage('Transfer completed successfully!');
-
+    
+            setSuccessMessage(response.data.message || 'Transfer completed successfully!');
         } catch (error) {
             console.error('Transfer failed:', error.response ? error.response.data : error.message);
             setError(error.response?.data?.message || 'Something went wrong, please try again.');
         }
+        
     };
-
 
     return (
         <div className="flex justify-center h-screen bg-gray-100">
@@ -62,6 +63,8 @@ export const SendMoney = () => {
                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                                     id="amount"
                                     placeholder="Enter amount"
+                                    min="0"
+                                    max="500000"
                                 />
                             </div>
                             <button

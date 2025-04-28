@@ -4,7 +4,7 @@ import { Button } from "../components/Button";
 import { Heading } from "../components/Heading";
 import { InputBox } from "../components/InputBox";
 import { SubHeading } from "../components/SubHeading";
-import axios from "axios";
+import   axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
@@ -20,10 +20,7 @@ export const SignIn = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData({...formData,  [name]: value});
   };
 
   const handleSignIn = async () => {
@@ -38,34 +35,46 @@ export const SignIn = () => {
 
   }; 
 
-  return (
-    <div className="bg-slate-300 h-screen flex justify-center">
-      <div className="flex flex-col justify-center">
-        <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
-          <Heading label="Sign in" />
-
-          <SubHeading label="Enter your credentials to access your account" />
-
-          <InputBox name={"username"} type={"email"} onChange={handleChange} placeholder="john@gmail.com" label="Email" />
-          <InputBox name={"password"} placeholder="ilovepriya26" onChange={handleChange} label="password" />
-
-          <div className="pt-4">
-            <Button onClick={handleSignIn} label="Sign in" />
-          </div>
-
-          {errorMessage && (
-            <div className="bg-red-300 flex items-center justify-center p-2 rounded-lg">
-              <span>{errorMessage}</span>
+  try {
+    return (
+      <>
+       <div className="bg-slate-300 h-screen flex justify-center">
+        <div className="flex flex-col justify-center">
+          <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
+            <Heading label="Sign in" />
+  
+            <SubHeading label="Enter your credentials to access your account" />
+  
+              <InputBox name={"username"} type={"email"} onChange={handleChange} placeholder="john@gmail.com"  label="Email" />
+              <InputBox name={"password"} placeholder="example@123" type={"password"} onChange={handleChange} label="password" />
+  
+            <div className="pt-4">
+              <Button onClick={handleSignIn} label="Sign in" />
             </div>
-          )}
-
-          <BottomWarning
-            label="Don't have an account?"
-            buttonText="Sign up"
-            to="/signup"
-          />
+  
+            {errorMessage && (
+              <div className="bg-red-300 flex items-center justify-center p-2 rounded-lg mt-3">
+                <span>{errorMessage}</span>
+              </div>
+            )}
+  
+            <BottomWarning
+              label="Don't have an account?"
+              buttonText="Sign up"
+              to="/signup"
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+      </>
+      
+    );
+  
+  }
+  catch(error)
+  {
+    console.log(`your error : ${error}`)
+  }
+
+  
 };

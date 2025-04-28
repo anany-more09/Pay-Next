@@ -30,9 +30,11 @@ export const SignUp = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/user/signup", formData);
       localStorage.setItem("token", response.data.token);
+      console.log(formData)
       navigate("/dashboard");
     } catch (error) {
       const message = error.response?.data?.message || "Sign-up failed, Please try again.";
+      console.log(message)
       setErrorMessage(message);
     }
   };
@@ -42,11 +44,12 @@ export const SignUp = () => {
       <div className="flex flex-col justify-center">
         <div className="rounded-lg bg-white w-80 text-center p-2 h-max px-4">
           <Heading label="Sign up" />
-          <SubHeading label="Enter your information to create an account" />
+          <SubHeading label="Enter your info to create an account" />
           <InputBox name="firstName" onChange={handleChange} placeholder="John" label="First Name" />
           <InputBox name="lastName" onChange={handleChange} placeholder="Doe" label="Last Name" />
           <InputBox type={"email"} name="username" onChange={handleChange} placeholder="example@gmail.com" label="Email" />
           <InputBox name="password" onChange={handleChange} placeholder="8-digits" label="Password" />
+          <div></div>
           <div className="pt-4">
             <Button onClick={handleSignUp} label="Sign up" />
           </div>
@@ -61,3 +64,5 @@ export const SignUp = () => {
     </div>
   );
 };
+
+export default SignUp
