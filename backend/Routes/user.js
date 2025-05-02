@@ -8,6 +8,7 @@ userRoute.post("/signin", handleUserSignIn)
 userRoute.put("/update", handleUpdateUser)
 userRoute.get("/bulk",  getUsers)
 
+
 module.exports = {
     userRoute
 }

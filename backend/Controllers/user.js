@@ -53,17 +53,22 @@ const user = await User.create({
 
 })
 
+
+// Here the id is being created
+
 const userId = user._id;
 
 await Acount.create({
     userId,
-    balance: parseInt(1 + Math.random() * 10000)
+    balance: 1000
 })
 
-const token = jwt.sign({
-    userId
-}, process.env.JWT_SECRET);
-// const userId = User._id;
+const token = jwt.sign(
+    { userId: user._id }, 
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  
 
 res.json({
     messsage: "User created successfully",
@@ -71,6 +76,33 @@ res.json({
 });
 
 
+}
+
+// Income adding function here
+
+async function handleIncome()
+{
+    try {
+        const { user_Id, income } = req.body;
+    
+        if (!user_Id || typeof income !== 'number') {
+          return res.status(400).json({ message: 'user_Id and valid income are required' });
+        }
+    
+        const updatedAccount = await Acount.findOneAndUpdate(
+          { user_Id: user_Id },
+          { $inc: { income: income } },
+          { new: true }
+        );
+    
+        if (!updatedAccount) {
+          return res.status(404).json({ message: 'Account not found' });
+        }
+    
+        res.status(200).json({ message: 'Income added successfully', account: updatedAccount });
+      } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+      }
 }
 
 // handleing the signin route here
@@ -134,7 +166,7 @@ async function handleUpdateUser(req, res)
 async function getUsers(req, res) {
 
     // console.log('Query Params:', req.query);
-    const { firstName, lastName, showAll } = req.query;
+    const { firstName, lastName, showAll } = req.query; 
     console.log(showAll)
 
     try {
@@ -187,7 +219,8 @@ async function getUsers(req, res) {
     handleUserSignUp,
     handleUserSignIn,
     handleUpdateUser, 
-    getUsers
+    getUsers,
+    handleIncome
  }
 
 

@@ -3,12 +3,13 @@ const { Acount } = require("../Models/acount");
 
 async function handleTransfer(req, res) {
     
-
     try {
         
         const { amount, to } = req.body;
         const senderId = req.userId;
-
+        const authHeader = req.headers.authorization;
+        console.log("Auth Header:", authHeader);
+        
         if (!senderId || !to || amount === undefined) {
             throw new Error("Missing required fields: senderId, to, or amount");
         }
@@ -47,9 +48,6 @@ async function handleTransfer(req, res) {
             { $inc: { balance: numericAmount } }
         );
         console.log(toUpdateResult); // Check the result of the update
-
-        
-
         return res.json({ message: "Transaction Successful" });
 
     } catch (err) {
@@ -68,16 +66,14 @@ async function handleGetBalance(req, res)
 {
     const account = await Acount.findOne({
         userId: req.headers.userId // may require change after testing
-
     });
     
     res.json({
        balance: account.balance
     });
-   
-}
+};
 
 module.exports = {
     handleTransfer,
-    handleGetBalance
+    handleGetBalance,
 }

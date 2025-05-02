@@ -33,9 +33,9 @@ export default function Track() {
   const [expenseValue, setExpenseValue] = useState('');
   const [expenseList, setExpenseList] = useState([]);
   const [description, setDescription] = useState('');
-
+  
   function handleClick(e) {
-    e.preventDefault();
+    e.preventDefault(); 
     const operation = e.target.value;
 
     if (operation === 'income') {
@@ -49,7 +49,7 @@ export default function Track() {
     if (operation === 'expense') {
       const newExpense = expense + parseFloat(expenseValue);
       if (!selectedCategory) {
-        alert("Please select a category");
+        alert("Please select a category.");
         return;
       }
 
@@ -83,8 +83,22 @@ export default function Track() {
 
     setExpenseValue('');
     setIncomeValue('');
+    setDescription('');
   }
 
+  function handleClear() {
+    const userToken = localStorage.getItem("token");
+  
+    localStorage.clear();
+  
+    if (userToken !== null) {
+      localStorage.setItem("token", userToken); 
+    }
+  
+    console.log("Cleared all data except 'token'");
+    window.location.reload()
+  }
+  
   return (
     <div className="min-h-screen bg-[#f8f9fa] p-6 flex flex-col items-center">
       <div className="flex flex-col lg:flex-row gap-8 w-full max-w-7xl">
@@ -104,10 +118,18 @@ export default function Track() {
             <button
               value="income"
               onClick={handleClick}
-              className="mt-2 w-full md:w-auto bg-[#343a40] text-white px-4 py-2 rounded hover:bg-[#23272b]"
+              className="mt-2 w-full md:w-auto bg-[#343a40] text-white px-4 py-2 rounded hover:bg-[#23272b] mx-6"
             >
               Add Income
             </button>
+
+            <button
+      value="clear"
+      onClick={handleClear}
+      className="mt-2 w-full md:w-auto bg-[#343a40] text-white px-4 py-2 rounded hover:bg-[#23272b]"
+    >
+      Clear Expense Data
+    </button>
           </div>
 
           {/* Expense Section */}
@@ -183,21 +205,3 @@ export default function Track() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

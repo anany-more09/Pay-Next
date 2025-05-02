@@ -12,22 +12,23 @@ export const SendMoney = () => {
 
     const handleTransfer = async () => {
         setSuccessMessage("");
-        setError(""); 
+        setError("");
         try {
             const response = await axios.post('http://localhost:3000/api/v1/acount/transfer',
                 { to: id, amount },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    },
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,    
+                    }
                 }
             );
-            // console.log('Response:', response.data); // Add this to inspect it
+
             setAmount('');
-    
+        
             setSuccessMessage(response.data.message || 'Transfer completed successfully!');
         } catch (error) {
             console.error('Transfer failed:', error.response ? error.response.data : error.message);
+      
             setError(error.response?.data?.message || 'Something went wrong, please try again.');
         }
         
