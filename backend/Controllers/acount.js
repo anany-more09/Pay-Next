@@ -58,20 +58,34 @@ async function handleTransfer(req, res) {
             error: err.message,
         });
     } finally {
-       
     }
 }
 
-async function handleGetBalance(req, res)
-{
-    const account = await Acount.findOne({
-        userId: req.headers.userId // may require change after testing
-    });
-    
-    res.json({
-       balance: account.balance
-    });
-};
+async function handleGetBalance(req, res) {
+    const { userId, amount } = req.body;
+
+    if (!userId || !amount || isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ message: "Invalid input" });
+    }
+
+    try {
+        const updated = await Acount.findOneAndUpdate(
+            { userId },
+            { $inc: { balance: amount } }
+        );
+
+        if (!updated) {
+            return res.status(404).json({ message: "Account not found" });
+        }
+
+        res.json({ message: "Income added", newBalance: updated.balance });
+    } catch (err) {
+        console.error("Add income error:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+}
+
+  
 
 module.exports = {
     handleTransfer,

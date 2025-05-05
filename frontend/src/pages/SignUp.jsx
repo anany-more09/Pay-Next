@@ -30,7 +30,7 @@ export const SignUp = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/v1/user/signup", formData);
       localStorage.setItem("token", response.data.token);
-      console.log(formData)
+      localStorage.setItem("userid", response.data.userid)
       navigate("/dashboard");
     } catch (error) {
       const message = error.response?.data?.message || "Sign-up failed, Please try again.";

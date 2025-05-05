@@ -72,7 +72,8 @@ const token = jwt.sign(
 
 res.json({
     messsage: "User created successfully",
-    token: token
+    token: token,
+    userid: userId
 });
 
 

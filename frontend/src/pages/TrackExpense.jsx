@@ -37,6 +37,7 @@ export default function Track() {
   function handleClick(e) {
     e.preventDefault(); 
     const operation = e.target.value;
+    
 
     if (operation === 'income') {
       const newIncome = income + parseFloat(incomeValue);

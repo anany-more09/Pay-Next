@@ -1,4 +1,4 @@
- # Node modules
+# Node modules
 node_modules/
 
 # Logs
@@ -12,42 +12,42 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
-# Directory for build output (Vite)
+# Vite build output
 dist/
 
 # Vite cache
 .vite/
 .cache/
 
-# macOS
+# macOS system files
 .DS_Store
 
-# Windows-specific files
+# Windows system files
 Thumbs.db
 Desktop.ini
 
-# IDE-specific files
+# IDE settings
 .vscode/
 .idea/
 
-# Optional npm cache directory
+# Optional npm cache
 .npm/
 
-# Optional eslint cache
+# ESLint cache
 .eslintcache
 
-# Optional REPL history
+# REPL history
 .node_repl_history
 
-# MongoDB data files (local database)
+# Local MongoDB data files
 data/
 
-# Coverage directory
+# Code coverage
 coverage/
 
 # Temporary files
 *.tmp
 *.temp
 
-# Local environment
+# Local environment overrides
 *.local
